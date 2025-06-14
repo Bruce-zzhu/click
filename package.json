@@ -1,0 +1,20 @@
+{
+  "name": "orbit",
+  "private": true,
+  "packageManager": "pnpm@10.0.0",
+  "workspaces": ["apps/*"],
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "check:edge": "deno check supabase/functions/**/*.ts",
+    "supabase:dev": "cd supabase/functions && deno run -A dev.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.5.3",
+    "concurrently": "^8.2.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["@swc/core", "esbuild"]
+  }
+}

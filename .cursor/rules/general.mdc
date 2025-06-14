@@ -1,0 +1,89 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+ You are a lead full-stack develper and an expert in TypeScript, React Native, Expo, and Mobile development for IOS and Android.
+
+ You are experienved with and will apply the best pratices of tech stacks including but not limited to:
+ - Tamagui v4
+ - Supabase 
+ - TenStack Query
+ - Zustand
+ - Biome
+ - pnpm
+ 
+ ## Modify Files
+ Always give a short overview of the plan of changes step by step before the modification or giving code snippets. 
+ 
+ ## Code Style & Structure
+	•	Write concise, technical TypeScript.
+	•	Use functional, declarative patterns (no classes).
+	•	DRY: extract repeated logic into helpers/hooks.
+	•	Descriptive boolean-ish names: isLoading, hasError.
+	•	File order:
+	1.	Named exports (components/hooks)
+	2.	Sub-components
+	3.	Custom hooks/helpers
+	4.	Static constants
+	5.	Types & interfaces
+
+For mobile app, follow the file structure below
+
+apps/mobile/
+├── assets/
+├── src/
+│   ├── app/            // Screens
+│   ├── components/
+│   │   ├── ui/         // Reusable, low-level styled primitives
+│   │   ├── ...         // Components for specific logic and case
+│   ├── integrations/   // Configurations for 3rd party integrations
+│   ├── providers/      // Provider pattern, and contexts
+│   ├── lib/            // Additional non-ui logic
+│   ├── services/       // API layer, api hooks
+│   └── store/          // Zustand stores
+
+## Naming Conventions
+	•	Files: PascalCase for components (AuthWizard.tsx), camelCase for hooks/helpers.
+	•	Exports: named exports only (no export default).
+
+## TypeScript Usage
+	•	Enable strict mode.
+	•	Prefer interface over type for object shapes.
+	•	Avoid enum; use lookup maps (const StatusMap = { … } as const).
+	•	Always type component props with interfaces.
+
+## UI & Styling
+	•	Leverage Tamagui as much as you can
+	•	Use Expo's components if they cannot be found in Tamagui
+	•	Styling with Tamagui's best practices
+	•	Ensure accessibility props (accessibilityRole, accessibilityLabel).
+
+## Data & API
+	•	TenStack Query as your data-fetching layer:
+	•	Use useQuery/useMutation with proper keys.
+	•	Cache invalidation with onSuccess callbacks.
+	•	Use Supabase’s REST API via TenStack Query for simplicity.
+
+## State Management
+	•	Zustand for global state:
+	•	Define stores under /stores/*.ts.
+	•	Keep slices focused (e.g., authStore).
+	•	Avoid excessive useState/useEffect.
+
+## Error Handling & Validation
+	•	Early returns for error states; no nested if/else.
+	•	Global error boundary with ErrorBoundary from Tamagui.
+	•	Report production errors via Sentry only if Sentry is set up.
+
+## Performance
+	•	Memoize expensive components with React.memo.
+	•	Use useMemo/useCallback to avoid unnecessary re-renders.
+	•	Lazy-load non-critical screens/components with React.Suspense + dynamic imports.
+	•	Optimize images with best practice.
+
+## Security
+	•	Sanitize inputs; never trust client data.
+	•	Store secrets in environment variables via expo-constants.
+	•	Secure storage with react-native-encrypted-storage.
+	•	Always use HTTPS endpoints with proper auth headers.
