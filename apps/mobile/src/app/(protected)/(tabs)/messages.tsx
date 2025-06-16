@@ -1,21 +1,46 @@
-import { Screen } from '@app/providers/ScreenProvider'
-import { useWindowDimensions } from 'react-native'
-import { Card, Text, YStack } from 'tamagui'
-export default function MessagesScreen() {
-  const { width } = useWindowDimensions()
+import { ChatWrapper } from '@app/integrations/stream-chat/ChatWrapper';
+import { Screen } from '@app/providers/ScreenProvider';
+import { useEffect, useState } from 'react';
+import { Channel as TChannel } from 'stream-chat';
+import { Channel, MessageInput, MessageList, useChatContext } from 'stream-chat-expo';
+import { Spinner } from 'tamagui';
+
+
+const ChatChannel = () => {
+  const { client } = useChatContext()
+  const [channel, setChannel] = useState<TChannel | null>(null);
+
+  useEffect(() => {
+    const createAndWatchChannel = async () => {
+      const newChannel = client.channel("messaging", "channel_id");
+      await newChannel.watch();
+      setChannel(newChannel);
+    };
+    createAndWatchChannel();
+  }, []);
+
+  if (!channel) {
+    return <Spinner />
+  }
 
   return (
-    <Screen>
-      <YStack flex={1} items="center" justify="center" bg="$background" p="$4">
-        <Card width={width * 0.9} p="$6">
-          <Text fontSize="$8" fontWeight="700">
-            Messages
-          </Text>
-          <Text mt="$3" fontSize="$5" color="$color">
-            Your messages will appear here.
-          </Text>
-        </Card>
-      </YStack>
-    </Screen>
+    <Channel channel={channel}>
+      <MessageList />
+      <MessageInput />
+    </Channel>
+  )
+}
+
+
+export default function MessagesScreen() {
+
+
+
+  return (
+    <ChatWrapper>
+      <Screen>
+        <ChatChannel />
+      </Screen>
+    </ChatWrapper>
   )
 }

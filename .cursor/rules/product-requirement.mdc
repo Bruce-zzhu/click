@@ -1,0 +1,287 @@
+---
+description: Product requirement document, helpful for tasks involved business logic
+globs: 
+alwaysApply: false
+---
+Product Requirement Document
+Table of Contents
+Product Overview
+
+What is Click?
+
+Target Audience
+
+Brand Personality & Tone
+
+Scopes
+
+Features
+
+Core 1 — User Verification
+
+Core 2 — Signup Onboarding
+
+Core 3 — Context & Profile
+
+Core 4 — Smart Matching
+
+Core 5 — Meet-up Management
+
+Extra — Reliability Score
+
+
+
+Product Overview<a id="product-overview"></a>
+What is Click?<a id="what-is-click"></a>
+Click is a next-gen networking app that removes friction from meeting new, career-minded people. It automates the match, time, and place so users share one meaningful in-person coffee chat—no endless swiping or back-and-forth messages.
+
+The intent-driven, AI-powered flow streamlines everything from smart profile prompts to automatic scheduling. Click isn’t about scrolling through profiles; it’s about that instant connection, shared ambition, and spark of possibility.
+
+Target Audience<a id="target-audience"></a>
+University students & recent graduates
+
+Career explorers & emerging professionals
+
+Digital natives who are tech-savvy, community-driven, and growth-oriented
+
+Anyone seeking meaningful professional conversations without the noise
+
+Brand Personality & Tone<a id="brand-personality--tone"></a>
+Modern & minimalist — clean lines, clear flows
+
+Professional, not stiff — confident but never corporate
+
+Approachable & warm — celebrates human connection
+
+Smart & intentional — clarity over complexity
+
+Inclusive & gender-neutral — built for everyone
+
+Scopes<a id="scopes"></a>
+Scope	Description
+Platform	Mobile only (iOS & Android)
+Authentication & Verification	Signup, login, logout; verify business or school email
+Sign-up Onboarding	Collect basic info during signup
+Context & Profile	Guided chat to feed context to LLM; profile view & edit
+Smart Matching	Match users, generate match report, auto-schedule
+Meet-up Management	Manage upcoming & past meets
+Reliability Score	Credibility system (low-priority for MVP)
+
+Features<a id="features"></a>
+Core 1 — User Verification<a id="core-1--user-verification"></a>
+Overview
+Email verification is required before a user can sign up:
+
+Business email – immediate
+
+School email – immediate
+
+Personal email – manual review (may take days)
+
+User Story
+As a new user, I want to verify my email so that I can sign up to the app.
+
+Core 2 — Signup Onboarding<a id="core-2--signup-onboarding"></a>
+Overview
+After verification, users provide basic info:
+
+First & last name
+
+Gender
+
+Date of birth (18+ only)
+
+Profile picture
+
+“How did you hear about us?”
+
+User Story
+As a verified user, I want to provide the required information so I can access the app.
+
+Core 3 — Context & Profile<a id="core-3--context--profile"></a>
+3.1 Overview
+3.1.1 Context Collection
+A guided chat gathers rich data for better matching:
+
+Professional snapshot
+
+Company / university
+
+Title / role
+
+Years of experience & seniority
+
+Industry
+
+Skill graph
+
+Skills (tags)
+
+“I can offer” list
+
+“I want to learn” list
+
+Goals & interests
+
+Open goals
+
+Interest areas
+
+Conversation comfort
+
+Ice-breaker topics
+
+Preferred languages
+
+Conversation styles
+
+Match preferences
+
+Who you’d like to meet
+
+Strict vs Surprise me
+
+Quality vs Speed match
+
+Café preferences
+
+Availability — select times in an in-app calendar
+
+Location — default to popular Melbourne CBD cafés unless user specifies; limited to Greater Melbourne
+
+3.1.2 Profile View & Edit
+All collected context plus signup basics appear on a profile screen; users can update anytime.
+
+3.2 User Stories
+As a user, I want to share my professional background for relevant matches.
+
+As a user, I want to specify skills & learning interests to find mutual learning opportunities.
+
+As a user, I want to indicate conversation preferences & languages for comfortable chats.
+
+As a user, I want to set availability & preferred locations in Melbourne for convenient meets.
+
+As a user, I want to review & update my profile so preferences stay current.
+
+Core 4 — Smart Matching<a id="core-4--smart-matching"></a>
+4.1 Overview
+Matches are calculated from personal context + time + location and produce an auto-scheduled meet-up.
+
+4.1.1 Matching State
+State	Description
+Active	User is searching (takes priority)
+Idle	Default; can receive requests
+Inactive	Cannot receive requests (toggleable)
+
+4.1.2 Async Match
+User can close the app while the system searches; searches may last seconds to hours.
+
+4.1.3 Rules About Matching
+Rule	Description
+1 result per search	Only one candidate returned
+1 active search	Prevents double-booking / race conditions
+Max 2 confirmed meets	Habit-forming, avoids overload
+Max 1 meet per week	Prevents scheduling conflicts
+Cancel anytime	User may cancel before result
+
+4.1.4 Match Result
+Notification with match report, time, location.
+
+If no match: terminate search; after 24 h timeout.
+
+“Still looking” notifications every 12 h.
+
+After three failures, suggest relaxing filters.
+
+4.1.5 Confirm & Auto-confirm
+Users choose manual confirmation or automatic scheduling.
+
+4.1.6 User Flows
+Illustrated flows for manual ↔ auto-confirm combinations (see original diagrams).
+
+4.2 User Stories
+Set matching state (Active/Idle/Inactive).
+
+Initiate a match request and multitask while searching.
+
+Limit to ≤2 confirmed meets and ≤1 per week.
+
+Receive a match report explaining the pairing.
+
+Receive status notifications every 12 h.
+
+Choose manual vs auto-confirmation.
+
+Core 5 — Meet-up Management<a id="core-5--meet-up-management"></a>
+5.1 Overview
+5.1.1 Upcoming Meet-ups
+Auto-created when a match is confirmed.
+
+Users can view details or cancel (late-cancel penalty).
+
+24-hour reminder notification.
+
+5.1.2 In-progress Meet-up
+Opens a temporary chat 1 h before start; closes afterward.
+
+Users confirm completion and give feedback.
+
+5.1.3 Meet-up Feedback
+Captures: confirmation, rating, comments.
+
+5.1.4 Past Meet-ups
+History view with editable feedback.
+
+5.2 User Stories
+View upcoming meet-ups to manage schedule.
+
+Use temporary chat for coordination.
+
+Provide feedback post-meet.
+
+View past meet-ups for history.
+
+Cancel meet-ups understanding penalties.
+
+Receive reminders for preparation.
+
+Extra — Reliability Score<a id="extra--reliability-score"></a>
+6.1 Overview
+Credibility system promoting community safety.
+Start = 90, Max = 100.
+
+6.1.1 Status
+Status	Score
+Badge	100
+Green	≥ 90
+Blue	≥ 80
+Yellow	≥ 60
+Red	< 60
+
+6.1.2 Penalties
+Scenario	Penalty
+Every 3 reports	−20 pts + 7-day cooldown
+Late cancellation	1-2× = −10 pts; 3× + = −15 pts (90-day reset)
+No-show	1st = −15 pts + 7 days; 2× + = −20 pts + 14 days (90-day reset)
+
+6.1.3 Earn
++5 pts for every attended meet-up.
+
+6.1.4 Account Suspension
+Score < 60 or
+
+≥ 10 reports ⇒ account suspended (no access).
+
+6.1.5 Visibility
+Users only see status label (not exact score) with tips, e.g.,
+
+“Attend 2 meetings to reach Green and get priority.”
+
+6.2 User Stories
+Understand the reliability system to maintain good standing.
+
+View credibility status and be notified on score changes.
+
+Know how to earn points to improve status.
+
+As admin, monitor reliability scores to keep the community safe.

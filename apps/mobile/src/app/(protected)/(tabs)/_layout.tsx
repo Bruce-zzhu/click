@@ -23,7 +23,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Discovery',
+          title: 'Home',
           tabBarIcon: ({ color }) => <Telescope color={color as any} />,
           headerRight: () => (
             <Link href="/(protected)/modal" asChild>
@@ -35,7 +35,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="messages"
         options={{
-          title: 'Messages',
+          title: 'Chat',
           tabBarIcon: ({ color }) => <MessagesSquare color={color as any} />,
         }}
       />

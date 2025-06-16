@@ -11,6 +11,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const _hydrated = useAuthStore((state) => state._hydrated)
 
+
   useEffect(() => {
     if (!_hydrated) return // Wait for the store to hydrate
 

@@ -1,5 +1,5 @@
 // Configure error boundaries and reporting first
-import { LogBox } from 'react-native'
+import { LogBox } from 'react-native';
 
 // Suppress specific warnings that are known and can't be fixed
 LogBox.ignoreLogs([
@@ -8,8 +8,9 @@ LogBox.ignoreLogs([
 ])
 
 // Use the actual App component from expo-router
-import { App } from 'expo-router/build/qualified-entry'
-import { renderRootComponent } from 'expo-router/build/renderRootComponent'
+
+import { App } from 'expo-router/build/qualified-entry';
+import { renderRootComponent } from 'expo-router/build/renderRootComponent';
 
 // This file should only import and register the root.
 // For global setup, import additional files with initialization code

@@ -8,7 +8,9 @@ import { useFonts } from 'expo-font'
 import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
 import 'react-native-gesture-handler'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import 'react-native-reanimated'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 // Catch any errors thrown by the Layout component.
 export { ErrorBoundary } from 'expo-router'
@@ -26,6 +28,7 @@ export default function RootLayout() {
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
   })
 
+
   useEffect(() => {
     if (interLoaded || interError) {
       // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
@@ -39,16 +42,20 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <ToastProvider swipeDirection="horizontal" duration={6000}>
-          <GlobalToast />
-          <AuthProvider>
-            <RootLayoutNav />
-          </AuthProvider>
-        </ToastProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <ThemeProvider>
+            <ToastProvider swipeDirection="horizontal" duration={6000}>
+              <GlobalToast />
+              <AuthProvider>
+                <RootLayoutNav />
+              </AuthProvider>
+            </ToastProvider>
+          </ThemeProvider>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </SafeAreaProvider>
   )
 }
 

@@ -1,4 +1,5 @@
 {
+  "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit",
@@ -7,5 +8,10 @@
     "quickfix.biome": "explicit"
   },
   "deno.enable": true,
-  "deno.enablePaths": ["supabase/functions"],
+  "deno.enablePaths": [
+    "supabase/functions"
+  ],
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
 }

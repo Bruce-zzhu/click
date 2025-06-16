@@ -1,8 +1,10 @@
 {
-  "name": "orbit",
+  "name": "click",
   "private": true,
   "packageManager": "pnpm@10.0.0",
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
     "lint": "biome lint .",
     "format": "biome format --write .",
@@ -11,10 +13,13 @@
     "supabase:dev": "cd supabase/functions && deno run -A dev.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.3",
+    "@biomejs/biome": "^1.9.4",
     "concurrently": "^8.2.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@swc/core", "esbuild"]
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "esbuild"
+    ]
   }
 }

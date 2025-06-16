@@ -1,10 +1,24 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.1/schema.json",
-  "organizeImports": {
-    "enabled": false
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 90,
+    "ignore": ["**/*/generated-new.ts", "**/*/generated-v2.ts"]
   },
+  "javascript": {
+    "formatter": {
+      "trailingComma": "es5",
+      "jsxQuoteStyle": "double",
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },  
   "files": {
-    "include": ["apps/**/*.{ts,tsx,js,jsx,json}", "supabase/**/*.{ts,tsx,js,jsx,json}"]
+    "include": ["**/*.{ts,tsx,js,jsx,json}"]
   },
   "linter": {
     "enabled": true,
@@ -59,22 +73,6 @@
         "useAltText": "off",
         "useButtonType": "off"
       }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "formatWithErrors": false,
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "lineWidth": 90,
-    "ignore": ["**/*/generated-new.ts", "**/*/generated-v2.ts"]
-  },
-  "javascript": {
-    "formatter": {
-      "trailingComma": "es5",
-      "jsxQuoteStyle": "double",
-      "semicolons": "asNeeded",
-      "quoteStyle": "single"
     }
   }
 }
