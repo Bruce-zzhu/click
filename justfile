@@ -31,6 +31,9 @@ db-status:
 db-stop:
     supabase stop
 
+db-deploy-funcs:
+    supabase functions deploy
+
 db-deploy-func name='':
     supabase functions deploy {{name}}
 

@@ -1,51 +1,70 @@
-import { useEffect, useState } from 'react'
-import { Channel } from 'stream-chat'
-import { streamClient } from '.'
+import { useAuthStore } from "@app/store/authStore";
+import { useEffect, useState, useTransition } from "react";
+import { Channel, StreamChat } from "stream-chat";
+import { supabase } from "../supabase";
+import { CHAT_BOT } from "./constants";
 
-export const useInitStreamChat = () => {
-  const [isReady, setIsReady] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [channel, setChannel] = useState<Channel | null>(null)
+const fetchStreamToken = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error("No Supabase session");
 
+  const { data, error } = await supabase.functions.invoke(
+    "generate-stream-token",
+    { headers: { Authorization: `Bearer ${session.access_token}` } },
+  );
+  if (error) throw error;
 
-  // TODO: get user token from supabase
-  const userId = 'test-user'
-  const userName = 'Test User'
-  const agentId = 'agent-1'
+  return data.token;
+};
 
-  console.log('useInitStreamChat')
-  console.log('isReady', isReady)
-  console.log('channel', channel)
+function generateChannelId(userId: string): string {
+  return `${CHAT_BOT.ID}-${userId}`;
+}
+
+export const useInitStreamChat = (streamClient: StreamChat) => {
+  const [isLoading, startTransition] = useTransition();
+  const [channel, setChannel] = useState<Channel | null>(null);
+
+  const userId = useAuthStore((state) => state.user?.id) as string;
+  const userName = useAuthStore((state) => state.user?.email);
 
   useEffect(() => {
-    const init = async () => {
+    startTransition(async () => {
       try {
-        setIsLoading(true)
-        const userToken = streamClient.devToken("test-user")
-        // Connect user
-        await streamClient.connectUser({
-          id: userId,
-          name: userName,
-        }, userToken)
-
-        // Initialize a simple channel
-        const newChannel = streamClient.channel("messaging", {
-          members: [userId, agentId],
-        });
-        await newChannel.watch()
-
-        setChannel(newChannel)
-        setIsReady(true)
-        setIsLoading(false)
+        await connectStreamUser();
+        await connectChannel();
       } catch (error) {
-        console.error(error)
-        setIsReady(false)
-        setIsLoading(false)
+        console.error(error);
       }
-    }
+    });
 
-    init()
-  }, [])
+    return () => {
+      streamClient.disconnectUser();
+      channel?.stopWatching();
+      setChannel(null);
+    };
+  }, []);
 
-  return { isReady, isLoading, channel }
-}
+  const connectStreamUser = async () => {
+    await streamClient.connectUser(
+      { id: userId, name: userName },
+      // 👉 tokenProvider:
+      async () => {
+        // called immediately, and again whenever the old token expires
+        return fetchStreamToken();
+      },
+    );
+  };
+
+  // Channel is created in backend, here we just connect to it
+  const connectChannel = async () => {
+    const channelId = generateChannelId(userId);
+    const newChannel = streamClient.channel("messaging", channelId, {
+      members: [CHAT_BOT.ID, userId],
+    });
+    await newChannel.watch();
+    setChannel(newChannel);
+  };
+
+  return { isLoading, channel, connectStreamUser };
+};

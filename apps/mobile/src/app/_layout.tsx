@@ -1,7 +1,7 @@
 import { GlobalToast } from '@app/components/ui/GlobalToast'
 import { queryClient } from '@app/integrations/tanstack-query'
-import { AuthProvider } from '@app/providers/AuthProvider'
 import { ThemeProvider } from '@app/providers/ThemeProvider'
+import { useAuthStore } from '@app/store/authStore'
 import { ToastProvider } from '@tamagui/toast'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
@@ -28,18 +28,19 @@ export default function RootLayout() {
     InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
   })
 
+  const _hydrated = useAuthStore((state) => state._hydrated)
+
 
   useEffect(() => {
-    if (interLoaded || interError) {
-      // Hide the splash screen after the fonts have loaded (or an error was returned) and the UI is ready.
-      // TODO: should we hide it when auth provider is ready
+    if (interLoaded && _hydrated) {
       SplashScreen.hideAsync()
     }
-  }, [interLoaded, interError])
+  }, [interLoaded, _hydrated])
 
-  if (!interLoaded && !interError) {
+  if (!(interLoaded && _hydrated)) {
     return null
   }
+
 
   return (
     <SafeAreaProvider>
@@ -48,9 +49,7 @@ export default function RootLayout() {
           <ThemeProvider>
             <ToastProvider swipeDirection="horizontal" duration={6000}>
               <GlobalToast />
-              <AuthProvider>
-                <RootLayoutNav />
-              </AuthProvider>
+              <RootLayoutNav />
             </ToastProvider>
           </ThemeProvider>
         </GestureHandlerRootView>

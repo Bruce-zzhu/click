@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@/": "../_shared/",
+    "openai": "npm:openai@5.5.0"
+  }
+}
