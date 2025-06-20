@@ -1,6 +1,8 @@
 {
   "imports": {
     "@/": "../_shared/",
-    "openai": "npm:openai@5.5.0"
+    "openai": "npm:openai@5.5.0",
+    "@aws-sdk/client-bedrock-runtime": "npm:@aws-sdk/client-bedrock-runtime@3.830.0",
+    "@smithy/fetch-http-handler": "npm:@smithy/fetch-http-handler@5.0.4"
   }
 }

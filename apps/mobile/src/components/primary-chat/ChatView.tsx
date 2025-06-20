@@ -1,22 +1,13 @@
 import { useConnectionTimeout } from '@app/components/primary-chat/useConnectionTimeout';
 import { useStreamChatContext } from '@app/integrations/stream-chat/ChatWrapper';
 import { STREAM_CHAT } from '@app/integrations/stream-chat/constants';
-import { supabase } from '@app/integrations/supabase';
+import { handleMessageReply } from '@app/integrations/supabase/edge-functions';
 import { useAuthStore } from '@app/store/authStore';
 import React, { useEffect } from 'react';
 import { AITypingIndicatorView, MessageInput, MessageList } from 'stream-chat-expo';
 
-
-const handleMessage = async (prompt: string, sessionToken: string) => {
-  await supabase.functions.invoke('reply-ai-chat', {
-    body: { prompt },
-    headers: { Authorization: `Bearer ${sessionToken}` },
-  });
-};
-
 export const ChatView = () => {
   useConnectionTimeout();
-  const sessionToken = useAuthStore((s) => s.token) as string;
 
   const { channelContext } = useStreamChatContext();
 
@@ -38,9 +29,13 @@ export const ChatView = () => {
           ai_state: STREAM_CHAT.AI_STATES.THINKING,
         });
 
-        handleMessage(event.message.text, sessionToken);
+        await handleMessageReply(event.message.text);
       } catch (err) {
         console.error('[ai-chat invoke] failed', err);
+        // Terminate thinking indicator
+        await channel.sendEvent({
+          type: STREAM_CHAT.AI_EVENTS.INDICATOR_CLEAR,
+        });
       }
     };
 
@@ -57,4 +52,4 @@ export const ChatView = () => {
       <MessageInput />
     </React.Fragment>
   );
-}
+};

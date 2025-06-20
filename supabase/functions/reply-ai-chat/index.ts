@@ -1,11 +1,7 @@
 import { CHAT_BOT, STREAM_CHAT } from "@/constants.ts";
 import { streamServerClient, supabaseClient } from "@/init.ts";
-import { OpenAI } from "openai";
-
-const openai = new OpenAI({
-  baseURL: "https://api.deepseek.com",
-  apiKey: '',
-});
+import { type AIMessage, getModelConfig } from "./model-config.ts";
+import { createProvider } from "./provider-factory.ts";
 
 // -----------------------------------------------------------------------------
 // Main edge function
@@ -47,6 +43,7 @@ Deno.serve(async (req) => {
     // -------------------------------------------------------------------------
     const body = await req.json();
     const prompt = body?.prompt?.trim();
+
     if (!prompt) {
       return new Response(JSON.stringify({ error: "Missing prompt" }), {
         status: 400,
@@ -55,7 +52,32 @@ Deno.serve(async (req) => {
     }
 
     // -------------------------------------------------------------------------
-    // 3. Get user's AI chat channel from metadata
+    // 3. Initialize AI provider
+    // -------------------------------------------------------------------------
+    let modelConfig;
+    let provider;
+
+    try {
+      modelConfig = getModelConfig();
+      provider = createProvider(modelConfig);
+    } catch (providerError) {
+      console.error("[ai-chat] Provider initialization error:", providerError);
+      const errorMessage = providerError instanceof Error
+        ? providerError.message
+        : "Unknown provider error";
+      return new Response(
+        JSON.stringify({
+          error: `AI provider error: ${errorMessage}`,
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. Get user's AI chat channel from metadata
     // -------------------------------------------------------------------------
     const channelId = user.user_metadata?.ai_chat_channel_id;
     if (!channelId) {
@@ -77,7 +99,7 @@ Deno.serve(async (req) => {
     );
 
     // -------------------------------------------------------------------------
-    // 4. Typing / thinking indicator
+    // 5. Typing / thinking indicator
     // -------------------------------------------------------------------------
     await channel.sendEvent({
       type: STREAM_CHAT.AI_EVENTS.INDICATOR_UPDATE,
@@ -86,7 +108,7 @@ Deno.serve(async (req) => {
     });
 
     // -------------------------------------------------------------------------
-    // 5. Placeholder message
+    // 6. Placeholder message
     // -------------------------------------------------------------------------
     const { message: placeholder } = await channel.sendMessage({
       text: "",
@@ -104,25 +126,25 @@ Deno.serve(async (req) => {
     });
 
     // -------------------------------------------------------------------------
-    // 6. Stream from DeepSeek
+    // 7. Stream from AI provider
     // -------------------------------------------------------------------------
-    const deepStream = await openai.chat.completions.create({
-      model: "deepseek-chat",
-      stream: true,
-      messages: [
-        { role: "system", content: "You are a helpful assistant" },
-        { role: "user", content: prompt },
-      ],
-      max_tokens: 500,
-    });
+    const messages: AIMessage[] = [
+      { role: "system", content: "You are a helpful assistant" },
+      { role: "user", content: prompt },
+    ];
 
     let full = "";
     let chunkIndex = 0;
-    for await (const chunk of deepStream) {
-      const delta = chunk?.choices?.[0]?.delta?.content ?? "";
+
+    for await (const response of provider.streamChat(messages)) {
+      if (response.done) break;
+
+      const delta = response.content;
       if (!delta) continue;
+
       full += delta;
       chunkIndex++;
+
       if (chunkIndex % 20 === 0 || chunkIndex < 8) {
         await streamServerClient.partialUpdateMessage(
           placeholder.id,
@@ -140,7 +162,7 @@ Deno.serve(async (req) => {
     );
 
     await channel.sendEvent({
-      type: "ai_indicator.clear",
+      type: STREAM_CHAT.AI_EVENTS.INDICATOR_CLEAR,
       message_id: placeholder.id,
       user_id: CHAT_BOT.ID,
     });

@@ -1,21 +1,8 @@
 import { useAuthStore } from "@app/store/authStore";
 import { useEffect, useState, useTransition } from "react";
-import { Channel, StreamChat } from "stream-chat";
-import { supabase } from "../supabase";
+import type { Channel, StreamChat } from "stream-chat";
+import { fetchStreamToken } from "../supabase/edge-functions";
 import { CHAT_BOT } from "./constants";
-
-const fetchStreamToken = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) throw new Error("No Supabase session");
-
-  const { data, error } = await supabase.functions.invoke(
-    "generate-stream-token",
-    { headers: { Authorization: `Bearer ${session.access_token}` } },
-  );
-  if (error) throw error;
-
-  return data.token;
-};
 
 function generateChannelId(userId: string): string {
   return `${CHAT_BOT.ID}-${userId}`;
