@@ -1,7 +1,7 @@
 export default {
   expo: {
-    name: 'Orbit',
-    slug: 'orbit',
+    name: 'Click',
+    slug: 'click',
     owner: 'your-expo-account',
     version: '1.0.0',
     runtimeVersion: {
@@ -18,12 +18,12 @@ export default {
     splash: {
       image: './assets/images/splash.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#2A0FFF',
     },
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.yourdomain.orbit',
+      bundleIdentifier: 'au.clickai.click',
       usesAppleSignIn: true,
     },
     android: {
@@ -32,7 +32,7 @@ export default {
         backgroundColor: '#ffffff',
       },
       edgeToEdgeEnabled: true,
-      package: 'com.yourdomain.orbit',
+      package: 'au.clickai.click',
     },
     plugins: [
       'expo-router',

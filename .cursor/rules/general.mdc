@@ -12,9 +12,11 @@ alwaysApply: true
  - Zustand
  - Biome
  - pnpm
+ - Stream Chat
  
  ## Modify Files
  Always give a short overview of the plan of changes step by step before the modification or giving code snippets. 
+ For complex logic and structure changes, we can consider addding documentations in docs/ directory. But always ask before making the changes to the docuemntation. 
  
  ## Code Style & Structure
 	•	Write concise, technical TypeScript.
@@ -42,6 +44,9 @@ apps/mobile/
 │   ├── lib/            // Additional non-ui logic
 │   ├── services/       // API layer, api hooks
 │   └── store/          // Zustand stores
+│   └── docs/           // Documentations in markdown
+
+We should keep the screen components simple, and the screen component should use components from src/components. For complex components in src/components, feel free to create hooks or utilities files inside the corresponding component directory, as we want the utils to stay closely with the components.
 
 ## Naming Conventions
 	•	Files: PascalCase for components (AuthWizard.tsx), camelCase for hooks/helpers.

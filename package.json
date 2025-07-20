@@ -11,7 +11,7 @@
     "supabase:dev": "cd supabase/functions && deno run -A dev.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.5.3",
+    "@biomejs/biome": "2.0.0",
     "concurrently": "^8.2.2"
   },
   "pnpm": {

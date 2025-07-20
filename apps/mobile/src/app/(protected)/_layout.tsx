@@ -7,6 +7,8 @@ import { useTheme } from 'tamagui'
 
 export default function ProtectedLayout() {
   useSupabaseSession()
+
+
   const theme = useTheme()
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const user = useAuthStore((state) => state.user)
